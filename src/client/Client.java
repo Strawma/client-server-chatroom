@@ -13,9 +13,6 @@ import server.Server;
 public class Client {
 
   private Socket socket;
-  private BufferedReader input;
-  private PrintWriter output;
-  private Scanner scanner;
   private boolean quit;
 
   public static void main(String[] args) {
@@ -23,16 +20,13 @@ public class Client {
     client.start();
   }
 
-  public Client() {
-    scanner = new Scanner(System.in);
-  }
-
   public void start() {
     try {
       quit = false;
       socket = new Socket(Server.HOST, Server.PORT);
-      input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      output = new PrintWriter(socket.getOutputStream(), true);
+      BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+      Scanner scanner = new Scanner(System.in);
       System.out.println("Client started");
       new Thread(() -> { // thread for sending messages
         try {

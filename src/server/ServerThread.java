@@ -10,11 +10,7 @@ import java.net.Socket;
  */
 public class ServerThread extends Thread{
   private Server server;
-  private Socket socket;
-  private BufferedReader input;
-  private PrintWriter output;
-
-  private String username;
+  private final Socket socket;
 
   public ServerThread(Socket socket) {
     this.socket = socket;
@@ -25,9 +21,10 @@ public class ServerThread extends Thread{
   @Override
   public void run() {
     try {
-      input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      output = new PrintWriter(socket.getOutputStream(), true);
+      BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
       output.println("Welcome to the chat server!");
+      String username;
       String message;
 
       while (true) {
