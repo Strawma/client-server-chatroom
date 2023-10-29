@@ -32,7 +32,6 @@ public class Client {
         try {
           String message;
           while (!quit) {
-            System.out.println("Enter a message:");
             message = scanner.nextLine();
             output.println(message);
             if (message.equals(Server.QUIT)) {

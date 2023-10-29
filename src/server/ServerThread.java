@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.HashSet;
 
 /**
  * This class is responsible for handling a connection to a single client.
@@ -12,8 +13,9 @@ public class ServerThread extends Thread{
   private Server server;
   private final Socket socket;
 
-  public ServerThread(Socket socket) {
+  public ServerThread(Server server, Socket socket) {
     this.socket = socket;
+    this.server = server;
     System.out.println("Client connected");
     start();
   }
@@ -27,18 +29,28 @@ public class ServerThread extends Thread{
       String username;
       String message;
 
+      HashSet<String> usernames = server.getUsernames();
       while (true) {
         output.println("Please enter a username:");
         username = input.readLine();
-        if (username != null) {
-          break;
+        synchronized (usernames) {
+          if (username != null && !username.isEmpty()) {
+            if (usernames.contains(username)) {
+              output.println("Username already taken");
+              continue;
+            }
+            output.println("Username accepted");
+            server.addUsername(username);
+            break;
+          }
         }
       }
-      output.println("Username accepted");
 
       while (true) {
+        output.println("Enter a message: ");
         message = input.readLine();
         if (message.equals(Server.QUIT)) {
+          server.removeUsername(username);
           System.out.println(username + " disconnected");
           break;
         }
