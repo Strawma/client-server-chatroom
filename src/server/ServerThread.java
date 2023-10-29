@@ -10,7 +10,7 @@ import java.util.HashSet;
  * This class is responsible for handling a connection to a single client.
  */
 public class ServerThread extends Thread{
-  private Server server;
+  private final Server server;
   private final Socket socket;
 
   public ServerThread(Server server, Socket socket) {
